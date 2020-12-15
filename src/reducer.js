@@ -3,15 +3,15 @@ export const initialState = {
     user: null
 };
 //selector
-export const getBaskeTotal = (basket) =>
+export const getBasketTotal = (basket) =>
     basket?.reduce((amount, item) => item.price + amount, 0);
 
 const reducer = ( state, action ) => {
     console.log(action);
     switch (action.type) {
-        case 'ADD_TO_BASKET':
+        case 'ADD_TO_BASKET': 
             return {
-                ...state,
+                ...state, 
                 basket: [...state.basket, action.item],
             };
 
@@ -26,8 +26,9 @@ const reducer = ( state, action ) => {
 
                     } else {
                     console.warn (
-                        'Cant remove product (id: ${action.id}) as its not in basket!'
-                        )
+                        // eslint-disable-next-line no-template-curly-in-string
+                        "Cant remove product (id: ${action.id}) as its not in basket!"
+                        );
                 }
  
                 return{
