@@ -35,7 +35,9 @@ function Payment() {
 
         }
         getClientSecret();
-    }, [basket])
+		}, [basket])
+		
+		console.log('The Secret Is >>>', clientSecret);
 
 
     const handleSubmit = async (event) => {
@@ -44,7 +46,8 @@ function Payment() {
         event.preventDefault();
         setProcessing(true);
         
-        const payload = await stripe.confirmCardPayment(clientSecret,{
+        // eslint-disable-next-line no-unused-vars
+        const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)
             }
@@ -53,10 +56,14 @@ function Payment() {
 
                 setSucceeded(true);
                 setError(null);
-                setProcessing(false);
-                
-                history.replace('/orders')
-      })
+								setProcessing(false);
+								
+								history.replace('/Orders')
+
+								dispatch({
+									type: 'EMPTY_BASKET'
+								})     
+      });
 
     }
 
@@ -136,7 +143,7 @@ function Payment() {
                             prefix={"$"}
                         />
                         <button disabled={ processing || disabled || succeeded }>
-                                <span>{processing ? <p>Processing</p> :"Buy Now"}</span>
+                                <span>{processing? <p>Processing</p> :"Buy Now"}</span>
                         </button>
                     </div> 
 
