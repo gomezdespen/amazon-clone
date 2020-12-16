@@ -7,6 +7,7 @@ import { CardElement, useStripe, useElements, } from '@stripe/react-stripe-js';
 import CurrencyFormat from 'react-currency-format';
 import { getBasketTotal } from "./reducer";
 import axios from './axios';
+import { db } from './firebase';
 
 
 
@@ -18,8 +19,8 @@ function Payment() {
     const stripe = useStripe();
     const elements = useElements();
 
-    const [succeeded, setSucceeded] =useState(false);
-    const [processing, setProcessing] =useState("");
+    const [succeeded, setSucceeded] = useState(false);
+    const [processing, setProcessing] = useState("");
     const [error, setError] = useState(null);
     const [disabled, setDisabled] = useState(true);
     const [clientSecret, setClientSecret] = useState(true);
@@ -34,10 +35,10 @@ function Payment() {
             setClientSecret(response.data.clientSecret)
 
         }
-        getClientSecret();
+            getClientSecret();
 		}, [basket])
 		
-		console.log('The Secret Is >>>', clientSecret);
+		console.log('The Secret Is >>>', clientSecret)
 
 
     const handleSubmit = async (event) => {
@@ -46,7 +47,7 @@ function Payment() {
         event.preventDefault();
         setProcessing(true);
         
-        // eslint-disable-next-line no-unused-vars
+       
         const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)
@@ -54,15 +55,26 @@ function Payment() {
         }).then(({ paymentIntent }) => {
                 // paymentIntent = payment confirmation
 
-                setSucceeded(true);
-                setError(null);
-								setProcessing(false);
-								
-								history.replace('/Orders')
+                db
+                    .collection('users')
+                    .doc('user?.uid')
+                    .collection('orders')
+                    .doc('paymentIntent.id')
+                    .set({
+                        basket: basket,
+                        amount: paymentIntent.amount,
+                        created: paymentIntent.created
+                    })
 
-								dispatch({
-									type: 'EMPTY_BASKET'
-								})     
+                setSucceeded(true)
+                setError(null)
+				setProcessing(false)
+								
+			    history.replace('/orders');
+
+				dispatch({
+				    type: 'EMPTY_BASKET',
+				})     
       });
 
     }
@@ -72,7 +84,7 @@ function Payment() {
         //listen for changes in the cardElement
         // and display any errors as the customer types their card details
         setDisabled(event.empty);
-        setError(event.error ? event.error.message : "");
+        setError(event.error?event.error.message : "");
     }
 
     return ( 
