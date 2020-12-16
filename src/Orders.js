@@ -4,12 +4,15 @@ import { db } from './firebase';
 import { useStateValue } from './StateProvider';
 import Order from './Order';
 
+
 function Orders() {
-    const [{basket, user}, dispatch] = useStateValue();
+    const [{ user}] = useStateValue();
     const[orders, setOrders] = useState([]);
 
+    
+
     useEffect(() => {
-        if(user){
+        if (user){
             db
                 .collection('users')
                 .doc(user?.uid)
@@ -20,12 +23,12 @@ function Orders() {
                         id: doc.id,
                         data: doc.data()
                     })))
-        ))
-    } else {
-        setOrders([])
+                ))
+        } else {
+            setOrders([])
     }
         
-    }, [user])
+    }, [user]);
 
     return (
         <div className="orders">
@@ -37,7 +40,7 @@ function Orders() {
                 ))}
             </div>
         </div>
-    )
+    );
 }
 
 export default Orders;

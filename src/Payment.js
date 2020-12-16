@@ -48,6 +48,7 @@ function Payment() {
         setProcessing(true);
         
        
+        // eslint-disable-next-line no-unused-vars
         const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)
@@ -68,14 +69,14 @@ function Payment() {
 
                 setSucceeded(true)
                 setError(null)
-				setProcessing(false)
-								
-			    history.replace('/orders');
+                setProcessing(false)
 
-				dispatch({
+                dispatch({
 				    type: 'EMPTY_BASKET',
-				})     
-      });
+				})  
+								
+			    history.replace('/orders')
+		})
 
     }
 
@@ -112,25 +113,23 @@ function Payment() {
             {/* Payment seciton--review items */ }
 
             <div className = "payment_section" >
+                <div className = "payment_title" >
+                    <h3> Review Items and delivery </h3> 
+                </div> 
 
-            <div className = "payment_title" >
-                <h3> Review Items and delivery </h3> 
-            </div> 
-
-            <div className = "payment_items"> 
-
-                {basket.map(item => ( 
-                    <CheckoutProduct 
-                        id ={item.id}
-                        title = {item.title}
-                        image = {item.image}
-                        price = {item.price}
-                        rating = {item.rating}
-                    />
-                 ))
-                } 
-            </div> 
-        </div>
+                <div className = "payment_items"> 
+                    {basket.map(item => ( 
+                        <CheckoutProduct 
+                            id ={item.id}
+                            title = {item.title}
+                            image = {item.image}
+                            price = {item.price}
+                            rating = {item.rating}
+                        />
+                    ))
+                    } 
+                </div> 
+            </div>
 
             {/* Payment seciton--payment method */ }
 
