@@ -17,7 +17,7 @@ const promise = loadStripe ("pk_test_51HyKrbBIkpIu7Pdntk1TDWQAcEv5cLEUS3Imv82uz7
 
 
 function App() {
-  const [{}, dispatch] = useStateValue();
+  const [dispatch] = useStateValue();
 
   useEffect(() => {
     // will only run once when the app component loads...
@@ -40,7 +40,7 @@ function App() {
         });
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
 
